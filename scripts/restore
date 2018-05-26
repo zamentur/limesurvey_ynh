@@ -89,6 +89,6 @@ ynh_system_reload nginx
 # SEND A README FOR THE ADMIN
 #=================================================
 
-message="If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/leed_ynh"
+message="If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/limesurvey_ynh"
 
 ynh_send_readme_to_admin "$message" "$admin"
