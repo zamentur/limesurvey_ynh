@@ -6,8 +6,8 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source /usr/share/yunohost/helpers
 source _common.sh
+source /usr/share/yunohost/helpers
 
 #=================================================
 # MANAGE FAILURE OF THE SCRIPT
@@ -31,7 +31,7 @@ db_user=$db_name
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THIS ARGS
 #=================================================
-ynh_script_progression --message="Validating installation parameters..." --time --weight=1
+ynh_script_progression --message="Validating installation parameters..." --weight=1
 
 export final_path=/var/www/$app
 test ! -e "$final_path" || ynh_die "This path already contains a folder"
@@ -42,7 +42,7 @@ ynh_webpath_register $app $domain $path_url
 #=================================================
 # STORE SETTINGS FROM MANIFEST
 #=================================================
-ynh_script_progression --message="Storing installation settings..." --time --weight=1
+ynh_script_progression --message="Storing installation settings..." --weight=1
 
 ynh_save_args domain admin is_public language final_path prefix path_url db_name db_user
 
