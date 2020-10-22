@@ -26,7 +26,6 @@ path_url=$YNH_APP_ARG_PATH
 admin=$YNH_APP_ARG_ADMIN
 is_public=$YNH_APP_ARG_IS_PUBLIC
 language=$YNH_APP_ARG_LANGUAGE
-prefix=lime_
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -122,7 +121,12 @@ set_permissions
 #=================================================
 # CONFIGURE
 #=================================================
-ynh_configure config.php "$final_path/application/config/config.php"
+ynh_script_progression --message="Configuring Limesurvey..." --weight=35
+
+cp ../conf/config.php $final_path/application/config/config.php
+
+ynh_replace_string --match_string="__DB_NAME__" --replace_string="$db_name" --target_file="$final_path/application/config/config.php"
+ynh_replace_string --match_string="__PASSWORD__" --replace_string="$db_pwd" --target_file="$final_path/application/config/config.php"
 
 #=================================================
 # INSTALL
