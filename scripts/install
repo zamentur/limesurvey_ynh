@@ -148,8 +148,10 @@ ynh_store_file_checksum "$final_path/application/config/config.php"
 #=================================================
 # LOAD SQL SPECIFIC CONFIG
 #=================================================
-ynh_configure data.sql ./data.sql
-mysql -u $db_user -p$db_pwd $db_user < ./data.sql
+# ynh_configure data.sql ./data.sql
+
+
+# mysql -u $db_user -p$db_pwd $db_user < ./data.sql
 
 #=================================================
 # Add nice themes
