@@ -12,23 +12,43 @@ source _common.sh
 #=================================================
 # LOAD SETTINGS
 #=================================================
-export app=$YNH_APP_INSTANCE_NAME
+ynh_script_progression --message="Loading installation settings..."  --weight=1
 
-export domain=$(ynh_app_setting_get $app domain)
-export path_url=$(ynh_app_setting_get $app path)
-export admin=$(ynh_app_setting_get $app admin)
-export final_path=$(ynh_app_setting_get $app final_path)
-export is_public=$(ynh_app_setting_get $app is_public)
-export prefix=$(ynh_app_setting_get $app prefix)
-export db_pwd=$(ynh_app_setting_get $app mysqlpwd)
-export db_name=$(ynh_app_setting_get $app db_name)
-export db_user=$(ynh_app_setting_get $app db_user)
+app=$YNH_APP_INSTANCE_NAME
+
+domain=$(ynh_app_setting_get $app domain)
+path_url=$(ynh_app_setting_get $app path)
+admin=$(ynh_app_setting_get $app admin)
+final_path=$(ynh_app_setting_get $app final_path)
+is_public=$(ynh_app_setting_get $app is_public)
+prefix=$(ynh_app_setting_get $app prefix)
+db_pwd=$(ynh_app_setting_get $app mysqlpwd)
+db_name=$(ynh_app_setting_get $app db_name)
+db_user=$(ynh_app_setting_get $app db_user)
+phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 
 #=================================================
 # CHECK VERSION
 #=================================================
 
-ynh_abort_if_up_to_date
+upgrade_type=$(ynh_check_app_version_changed)
+
+#=================================================
+# ENSURE DOWNWARD COMPATIBILITY
+#=================================================
+ynh_script_progression --message="Ensuring downward compatibility..."  --weight=2
+
+# If final_path doesn't exist, create it
+if [ -z "$final_path" ]; then
+    final_path=/var/www/$app
+    ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+fi
+
+# If db_name doesn't exist, create it
+if [ -z "$db_name" ]; then
+    db_name=$(ynh_sanitize_dbid --db_name=$app)
+    ynh_app_setting_set --app=$app --key=db_name --value=$db_name
+fi
 
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
@@ -42,12 +62,6 @@ ynh_clean_setup () {
 }
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
-
-#=================================================
-# CHECK THE PATH
-#=================================================
-
-path_url=$(ynh_normalize_url_path $path_url)	# Vérifie et corrige la syntaxe du path.
 
 #=================================================
 # STEP Migrations
@@ -114,14 +128,17 @@ ynh_add_nginx_config
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
+ynh_script_progression --message="Making sure dedicated system user exists..." --weight=1
 
-ynh_system_user_create $app	# Create the dedicated user, if not exist
+# Create a dedicated user (if not existing)
+ynh_system_user_create --username=$app
 
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
+ynh_script_progression --message="Upgrading PHP-FPM configuration..." --weight=2
 
-ynh_add_fpm_config	# Créer le fichier de configuration du pool php-fpm et le configure.
+ynh_add_fpm_config --phpversion=$YNH_PHP_VERSION
 
 #=================================================
 # SECURING FILES AND DIRECTORIES
@@ -134,13 +151,14 @@ set_permissions
 
 # Migrate DB
 cd $final_path
-ynh_exec_as "$app" php application/commands/console.php updatedb 
+ynh_exec_as "$app" php$phpversion application/commands/console.php updatedb 
 
 #=================================================
 # RELOAD NGINX
 #=================================================
+ynh_script_progression --message="Reloading NGINX web server..." --weight=2
 
-ynh_system_reload nginx
+ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # Send message to the admin
@@ -151,3 +169,9 @@ if ynh_version_le "2.62.2-2" ; then
     ynh_warn "$message"
     ynh_send_readme_to_admin "$message" "$admin"
 fi
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Upgrade of $app completed" --last

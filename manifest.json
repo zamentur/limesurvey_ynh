@@ -2,25 +2,25 @@
     "name": "LimeSurvey",
     "id": "limesurvey",
     "packaging_format": 1,
-    "version": "3.17.1~ynh1",
     "description": {
         "en": "LimeSurvey is used to create advanced poll.",
         "fr": "LimeSurvey est un outil de création et diffusion de sondage en ligne."
     },
+    "version": "4.3.21~ynh1",
+    "url": "https://www.limesurvey.org/",
     "license": "GPL-2.0+",
     "maintainer": {
         "name": "ljf",
         "email": "ljf+limesurvey_ynh@reflexlibre.net",
         "url": "https://reflexlibre.net"
     },
-    "url": "https://www.limesurvey.org/",
     "requirements": {
-        "yunohost": ">= 3.5.2"
+        "yunohost": ">= 3.8.1"
     },
     "multi_instance": true,
     "services": [
         "nginx",
-        "php5-fpm",
+        "php7.0-fpm",
         "mysql"
     ],
     "arguments": {
@@ -60,14 +60,14 @@
                     "en": "Choose the default language of this LimeSurvey",
                     "fr": "Choisissez la langue par défault de LimeSurvey"
                 },
-                "choices": ["en", "fr","es", "de"],
+                "choices": ["en", "fr", "es", "de"],
                 "default": "en"
             },
             {
                 "name": "is_public",
                 "type": "boolean",
                 "ask": {
-                    "en": "Will people without YunoHost account have LimeSurvey account to be able to create polls ?",
+                    "en": "Will people without YunoHost account have LimeSurvey account to be able to create polls?",
                     "fr": "Est-ce que des personnes sans compte YunoHost aurront un compte LimeSurvey pour créer des questionnaires ?"
                 },
                 "default": 1

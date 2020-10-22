@@ -17,6 +17,7 @@ ynh_abort_if_errors
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_print_info --message="Loading installation settings..."
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -24,9 +25,13 @@ domain=$(ynh_app_setting_get $app domain)
 final_path=$(ynh_app_setting_get $app final_path)
 db_name=$(ynh_app_setting_get $app db_name)
 db_pwd=$(ynh_app_setting_get $app mysqlpwd)
+phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 
 #=================================================
-# STANDARD BACKUP STEPS
+# DECLARE DATA AND CONF FILES TO BACKUP
+#=================================================
+ynh_print_info --message="Declaring files to be backed up..."
+
 #=================================================
 # BACKUP OF THE MAIN DIR OF THE APP
 #=================================================
@@ -43,11 +48,18 @@ ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf"
 # BACKUP OF THE PHP-FPM CONFIGURATION
 #=================================================
 
-ynh_backup "/etc/php5/fpm/pool.d/$app.conf"
-ynh_backup "/etc/php5/fpm/conf.d/20-$app.ini"
+ynh_backup "/etc/php/$phpversion/fpm/pool.d/$app.conf"
+ynh_backup "/etc/php/$phpversion/fpm/conf.d/20-$app.ini"
 
 #=================================================
 # BACKUP OF THE SQL BDD
 #=================================================
+ynh_print_info --message="Backing up the MySQL database..."
 
 ynh_mysql_dump_db "$db_name" > db.sql
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_print_info --message="Backup script completed for $app. (YunoHost will then actually copy those files to the archive)."

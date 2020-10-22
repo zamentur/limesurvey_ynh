@@ -9,7 +9,7 @@ If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to
 ## Overview
 LimeSurvey is used to create advanced poll.
 
-**Shipped version:** 3.17.1
+**Shipped version:** 4.3.21
 
 **Categories:** Productivity, Poll
 
@@ -48,13 +48,13 @@ Not supported.
 ## Links
 
  * Report a bug: https://github.com/YunoHost-Apps/limesurvey_ynh/issues
- * Website: https://www.limesurvey.org
+ * App website: https://www.limesurvey.org
+ * Upstream app repository: https://github.com/LimeSurvey/LimeSurvey
  * YunoHost website: https://yunohost.org/
 
 ---
 
-Developers infos
-----------------
+## Developers infos
 
 **Package by:** ljf
 
@@ -66,6 +66,5 @@ To try the testing branch, please proceed like that.
 ```
 sudo yunohost app install https://github.com/YunoHost-Apps/limesurvey_ynh/tree/testing --verbose
 or
-sudo yunohost app upgrade leed -u https://github.com/YunoHost-Apps/limesurvey_ynh/tree/testing --verbose
+sudo yunohost app upgrade limesurvey -u https://github.com/YunoHost-Apps/limesurvey_ynh/tree/testing --verbose
 ```
-

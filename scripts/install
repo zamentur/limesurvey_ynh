@@ -20,13 +20,13 @@ ynh_abort_if_errors
 # RETRIEVE ARGUMENTS FROM THE MANIFEST
 #=================================================
 
-export app=$YNH_APP_INSTANCE_NAME
+app=$YNH_APP_INSTANCE_NAME
 
 # Retrieve arguments
 ynh_export domain path_url admin is_public language
-export prefix=lime_
-export db_name=$(ynh_sanitize_dbid $app)
-export db_user=$db_name
+prefix=lime_
+db_name=$(ynh_sanitize_dbid $app)
+db_user=$db_name
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THIS ARGS
@@ -93,7 +93,8 @@ ynh_system_user_create $app
 ynh_script_progression --message="Configuring php-fpm..." --time --weight=1
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config
+ynh_add_fpm_config --phpversion=$YNH_PHP_VERSION
+phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 
 #=================================================
 # SECURING FILES AND DIRECTORIES
@@ -101,7 +102,6 @@ ynh_add_fpm_config
 
 # Set permissions
 set_permissions
-
 
 #=================================================
 # SPECIFIC SETUP

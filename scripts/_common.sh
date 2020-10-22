@@ -6,7 +6,9 @@
 # App package root directory should be the parent folder
 PKG_DIR=$(cd ../; pwd)
 
-pkg_dependencies="php7.0-cli php7.0-imap python-pip php7.0-gd php7.0-ldap php7.0-zip"
+YNH_PHP_VERSION="7.3"
+
+pkg_dependencies="php${YNH_PHP_VERSION}-cli php${YNH_PHP_VERSION}-imap python-pip php${YNH_PHP_VERSION}-gd php${YNH_PHP_VERSION}-ldap php${YNH_PHP_VERSION}-zip"
 
 #=================================================
 # SPECIFIC HELPERS
