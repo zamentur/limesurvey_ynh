@@ -121,16 +121,11 @@ ynh_add_config --template="../conf/config.php" --destination="$final_path/applic
 # INSTALL
 #=================================================
 
-ls_cli=$final_path/application/commands/console.php
-
-fullname=$(ynh_user_get_info "$admin" "fullname")
-mail=$(ynh_user_get_info "$admin" "mail")
+fullname=$(ynh_user_get_info --username=$admin --key="fullname")
+mail=$(ynh_user_get_info --username=$admin --key=mail)
 
 # Permission should be correctly set before to do this
-ynh_exec_as "$app" php $ls_cli install "$admin" "$password" "$fullname" "$mail"
-
-# Permission should be correctly set before to do this
-#ynh_exec_as "$app" php $ls_cli install "$admin" "$(ynh_string_random 24)" "$fullname" "$mail"
+ynh_exec_as "$app" php$phpversion $final_path/application/commands/console.php install "$admin" "$password" "$fullname" "$mail"
 
 #=================================================
 # LOAD SQL SPECIFIC CONFIG
@@ -175,11 +170,7 @@ fi
 # Only the admin can access the admin panel of the app (if the app has an admin panel)
 ynh_permission_create --permission="admin" --url="/admin" --allowed=$admin
 
-
-#ynh_script_progression --message="Configuring SSOwat..." --weight=1
-
-#yunohost app addaccess $app -u $admin
-#ynh_sso_access "/index.php?r=admin,/index.php?r=plugins,/scripts"
+#ynh_permission_create --permission="admin" --url="/index.php?r=admin" --additional_urls="/index.php?r=plugins /scripts"--allowed=$admin
 
 #=================================================
 # RELOAD NGINX

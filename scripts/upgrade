@@ -137,7 +137,7 @@ ynh_add_fpm_config
 #=================================================
 
 # Migrate DB
-ynh_exec_as "$app" php $final_path/application/commands/console.php updatedb 
+ynh_exec_as "$app" php$phpversion $final_path/application/commands/console.php updatedb 
 
 #=================================================
 # RELOAD NGINX
